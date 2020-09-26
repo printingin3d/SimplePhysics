@@ -7,15 +7,15 @@ public class Energy extends BasicOperations<Energy> {
 	public static final Energy ZERO = new Energy(0.0);
 
 	public static Energy getEnergyDifference(Temperature from, Temperature to, HeatInertia heatInertia) {
-		return new Energy((to.getKelvin()-from.getKelvin())*heatInertia.getValue());
+		return fromJoule((to.getKelvin()-from.getKelvin())*heatInertia.getValue());
 	}
 	
 	public static Energy fromJoule(double value) {
-	    return new Energy(value);
+	    return Math.abs(value)<1e-5 ? ZERO : new Energy(value);
 	}
 	
 	public static Energy fromWattHour(double value) {
-	    return new Energy(value*3600.0);
+	    return fromJoule(value*3600.0);
 	}
 	
 	private Energy(double energy) {
@@ -24,7 +24,7 @@ public class Energy extends BasicOperations<Energy> {
 
 	@Override
 	protected Energy convert(double value) {
-		return new Energy(value);
+		return fromJoule(value);
 	}
 	
 	public Energy(Temperature temp, HeatInertia heatInertia) {
