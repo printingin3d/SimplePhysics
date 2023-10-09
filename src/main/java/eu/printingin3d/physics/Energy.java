@@ -43,6 +43,14 @@ public class Energy extends BasicOperations<Energy> {
 		return Temperature.fromKelvin(value/heatInertia.getValue());
 	}
 	
+	public double getValueAsWattHour() {
+	    return value/3600.0;
+	}
+	
+	public double getValueAsJoule() {
+	    return value;
+	}
+	
 	@Override
 	public String toString() {
 		return DoubleFormat.formatWithSiPrefixes(value/3600.0)+"Wh";

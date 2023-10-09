@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>eu.printingin3d.simplephysics</groupId>
 	<artifactId>simplephysics</artifactId>
-	<version>0.1.2.0</version>
+	<version>0.1.3.2</version>
 	<packaging>jar</packaging>
     <name>SimplePhysics</name>
 	<description>Simple Java Objects for SI units like frequency or current.</description>
