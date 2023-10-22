@@ -1,5 +1,7 @@
 package eu.printingin3d.physics;
 
+import java.math.BigDecimal;
+
 public class Percent {
 	public static final Percent ZERO = new Percent(0);
 	public static final Percent HALF = new Percent(5000);
@@ -77,13 +79,13 @@ public class Percent {
 	    return value;
 	}
 	
-	public double getValue() {
-		return value*0.0001;
+	public BigDecimal getValue() {
+		return BigDecimal.valueOf(value, 4);
 	}
 	
 	@Deprecated
-	public double getComplementerValue() {
-		return 1.0-getValue();
+	public BigDecimal getComplementerValue() {
+		return BigDecimal.ONE.subtract(getValue());
 	}
 	
 	public Percent getComplementer() {

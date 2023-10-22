@@ -1,85 +1,85 @@
 package eu.printingin3d.physics;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 public final class Temperature extends DoubleValue {
-	public static final Temperature CELSIUS_ZERO = fromCelsius(0.0);
+    private static final BigDecimal CELSIUS_TO_KELVIN = new BigDecimal("273.14");
+
+	public static final Temperature CELSIUS_ZERO = fromCelsius(BigDecimal.ZERO);
 	
-	private static final double CELSIUS_TO_KELVIN = 273.14;
 	private static final Pattern CELSIUS_PATTERN = Pattern.compile("([0-9]+(\\.[0-9]+)?)C");
 	private static final Pattern KELVIN_PATTERN = Pattern.compile("([0-9]+(\\.[0-9]+)?)K");
 	
-	private Temperature(double kelvin) {
+	private Temperature(BigDecimal kelvin) {
 		super(kelvin);
 	}
 	
-	public static Temperature weightedMean(Temperature temp1, double weight1, Temperature temp2, double weight2) {
-		return new Temperature((temp1.value*weight1+temp2.value*weight2)/(weight1+weight2));
+	public static Temperature weightedMean(Temperature temp1, BigDecimal weight1, 
+	                                       Temperature temp2, BigDecimal weight2) {
+		return new Temperature(temp1.value.multiply(weight1).add(temp2.value.multiply(weight2))
+		        .divide(weight1.add(weight2), 4, RoundingMode.HALF_DOWN));
 	}
 	
 	public static Temperature mean(Temperature... temps) {
-		double sum = 0.0;
+	    BigDecimal sum = BigDecimal.ZERO;
 		for (Temperature temp : temps) {
-			sum+= temp.value;
+		    sum = sum.add(temp.value);
 		}
-		return new Temperature(sum/temps.length);
+		return new Temperature(sum.divide(new BigDecimal(temps.length), 4, RoundingMode.HALF_DOWN));
 	}
 	
-	public static Temperature fromCelsius(double celsius) {
+	public static Temperature fromCelsius(BigDecimal celsius) {
 		return new Temperature(convertTemperatureToKelvin(celsius));
 	}
 	
-	public static Temperature fromKelvin(double kelvin) {
+	public static Temperature fromKelvin(BigDecimal kelvin) {
 		return new Temperature(kelvin);
 	}
 	
 	public static Temperature fromString(String value) {
 		Matcher m = CELSIUS_PATTERN.matcher(value);
 		if (m.matches()) {
-			return fromCelsius(Double.parseDouble(m.group(1)));
+			return fromCelsius(new BigDecimal(m.group(1)));
 		}
 		m = KELVIN_PATTERN.matcher(value);
 		if (m.matches()) {
-			return fromKelvin(Double.parseDouble(m.group(1)));
+			return fromKelvin(new BigDecimal(m.group(1)));
 		}
-		return fromCelsius(Double.parseDouble(value));
+		return fromCelsius(new BigDecimal(value));
 	}
 	
-	public double getKelvin() {
+	public BigDecimal getKelvin() {
 		return value;
 	}
 	
-	public double getCelsius() {
+	public BigDecimal getCelsius() {
 		return convertKelvinToCelsius(value);
 	}
 	
-	public double difference(Temperature t) {
-		return value-t.value;
+	public BigDecimal difference(Temperature t) {
+		return value.subtract(t.value);
 	}
 	
 	@Override
 	public String toString() {
-		return String.format("%.2fC", Double.valueOf(convertKelvinToCelsius(value)));
+		return String.format("%.2fC", convertKelvinToCelsius(value));
 	}
 
-	private static double convertTemperatureToKelvin(double celsius) {
-		return celsius + CELSIUS_TO_KELVIN;
+	private static BigDecimal convertTemperatureToKelvin(BigDecimal celsius) {
+		return celsius.add(CELSIUS_TO_KELVIN);
 	}
 	
-	private static double convertKelvinToCelsius(double kelvin) {
-		return kelvin - CELSIUS_TO_KELVIN;
+	private static BigDecimal convertKelvinToCelsius(BigDecimal kelvin) {
+		return kelvin.subtract(CELSIUS_TO_KELVIN);
 	}
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		long temp;
-		temp = Double.doubleToLongBits(value);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		return result;
+		return value.hashCode();
 	}
 
 	@Override
@@ -94,15 +94,11 @@ public final class Temperature extends DoubleValue {
 			return false;
 		}
 		Temperature other = (Temperature) obj;
-		if (Double.doubleToLongBits(value) != Double
-				.doubleToLongBits(other.value)) {
-			return false;
-		}
-		return true;
+		return value.compareTo(other.value)==0;
 	}
 	
 	@Override
-	protected double getValue() {
+	protected BigDecimal getValue() {
 		return getCelsius();
 	}
 }

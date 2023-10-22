@@ -1,15 +1,17 @@
 package eu.printingin3d.physics;
 
+import java.math.BigDecimal;
+
 import eu.printingin3d.utils.DoubleFormat;
 
 public class Voltage extends BasicOperations<Voltage> {
 
-    public Voltage(double value) {
+    public Voltage(BigDecimal value) {
         super(value);
     }
 
     @Override
-    protected Voltage convert(double value) {
+    protected Voltage convert(BigDecimal value) {
         return new Voltage(value);
     }
     

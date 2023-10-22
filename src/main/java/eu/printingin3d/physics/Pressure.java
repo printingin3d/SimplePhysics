@@ -1,7 +1,9 @@
 package eu.printingin3d.physics;
 
+import java.math.BigDecimal;
+
 public class Pressure extends DoubleValue {
-    public Pressure(double value) {
+    public Pressure(BigDecimal value) {
         super(value);
     }
 

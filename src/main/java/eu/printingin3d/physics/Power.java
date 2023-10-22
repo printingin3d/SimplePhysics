@@ -1,20 +1,22 @@
 package eu.printingin3d.physics;
 
+import java.math.BigDecimal;
+
 import eu.printingin3d.utils.DoubleFormat;
 
 
 public class Power extends BasicOperations<Power> {
  // W/m2 - 1kW/m2 on the surface of the Earth, but at least 20% is lost because of the window
-	private static final double SUN_ENERGY = 800;  
+	private static final BigDecimal SUN_ENERGY = new BigDecimal(800);  
 
-	public static final Power ZERO = new Power(0.0);
+	public static final Power ZERO = new Power(BigDecimal.ZERO);
 		
-	public static Power sunPower(double area) {
-		return new Power(SUN_ENERGY * area);
+	public static Power sunPower(BigDecimal area) {
+		return new Power(SUN_ENERGY.multiply(area));
 	}
 	
 	public static Power heatingRequired(Temperature outside, Temperature inside, HeatingParam heatingParam) {
-		 return new Power((outside.getKelvin()-inside.getKelvin())*heatingParam.getValue());
+		 return new Power((outside.getKelvin().subtract(inside.getKelvin())).multiply(heatingParam.getValue()));
 	}
 	
 	public static Power getHeatingPowerOfAirFlow(Temperature temperature, VolumeFlowRate volume) {
@@ -22,11 +24,11 @@ public class Power extends BasicOperations<Power> {
 	}
 
 	@Override
-	protected Power convert(double value) {
+	protected Power convert(BigDecimal value) {
 		return new Power(value);
 	}
 
-	public Power(double power) {
+	public Power(BigDecimal power) {
 		super(power);
 	}
 	

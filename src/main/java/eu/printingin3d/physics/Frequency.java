@@ -1,15 +1,17 @@
 package eu.printingin3d.physics;
 
+import java.math.BigDecimal;
+
 import eu.printingin3d.utils.DoubleFormat;
 
 public class Frequency extends BasicOperations<Frequency> {
 
-    public Frequency(double value) {
+    public Frequency(BigDecimal value) {
         super(value);
     }
 
     @Override
-    protected Frequency convert(double value) {
+    protected Frequency convert(BigDecimal value) {
         return new Frequency(value);
     }
 

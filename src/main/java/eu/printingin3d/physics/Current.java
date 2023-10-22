@@ -1,15 +1,17 @@
 package eu.printingin3d.physics;
 
+import java.math.BigDecimal;
+
 import eu.printingin3d.utils.DoubleFormat;
 
 public class Current extends BasicOperations<Current> {
 
-    public Current(double value) {
+    public Current(BigDecimal value) {
         super(value);
     }
 
     @Override
-    protected Current convert(double value) {
+    protected Current convert(BigDecimal value) {
         return new Current(value);
     }
     
