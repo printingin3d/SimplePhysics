@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    triggers {
+        cron('H/15 * * * *')
+    }
+    
     tools {
         maven 'Global'
         jdk 'JDK8'
