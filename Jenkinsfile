@@ -4,11 +4,6 @@ pipeline {
     triggers {
         pollSCM 'H/15 * * * *'
     }
-    
-    tools {
-        maven 'Global'
-        jdk 'JDK8'
-    }
 
     stages {
         stage('Checkout') {
@@ -18,6 +13,14 @@ pipeline {
         }
 
         stage('Build') {
+            agent {
+                docker {
+                    // This container comes with JDK 17 and Maven 3.9 pre-installed
+                    image 'maven:3.6-jdk-8'
+                    // Reuses your local Maven cache so it doesn't re-download the internet every build
+                    args '-v /root/.m2:/root/.m2' 
+                }
+            }        
             steps {
                 // Build the project using Maven
                 sh 'mvn clean install'
