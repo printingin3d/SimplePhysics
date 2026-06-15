@@ -5,7 +5,7 @@ pipeline {
             image 'maven:3.6-jdk-8'
             label 'docker'
             // Reuses your local Maven cache so it doesn't re-download the internet every build
-            args '-v /root/.m2:/root/.m2' 
+            args '-v /c/jenkins_workspace:/home/jenkins/workspace -v /root/.m2:/root/.m2' 
         }
     }        
 
